@@ -25,4 +25,4 @@ def send_push(token, title, body, url="/"):
         token=token
     )
 
-    messaging.send(message)git add .
+    messaging.send(message)
