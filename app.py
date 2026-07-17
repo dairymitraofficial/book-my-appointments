@@ -102,6 +102,13 @@ def track_presence():
     """, (user_id, role, datetime.now(), datetime.now()))
     db.commit()
 
+@app.route("/health", methods=["GET"])
+def health():
+    return {
+        "status": "healthy",
+        "message": "Server is running",
+    }, 200
+
 if __name__ == "__main__":
     app.run(
         host="127.0.0.1",
