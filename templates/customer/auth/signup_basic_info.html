@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Customer Info</title>
+    <link rel="stylesheet" href="/static/css/instagram.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/static/js/pincode.js" defer></script>
+  </head>
+  <body class="center">
+    <form
+      method="post"
+      enctype="multipart/form-data"
+      class="card"
+      style="width: 100%; max-width: 420px"
+      onsubmit="showLoader('Sending booking request...')"
+    >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <h2 style="text-align: center">Your Details</h2>
+
+      <input name="full_name" placeholder="Full Name" required />
+
+      <input name="building" placeholder="Building / House No" required />
+      <input name="area" placeholder="Road / Area" required />
+
+      <input
+        name="pincode"
+        placeholder="Pincode"
+        maxlength="6"
+        required
+        onkeyup="fetchPincode(this.value)"
+      />
+
+      <input id="state" name="state" placeholder="State" readonly />
+      <input id="district" name="district" placeholder="District" readonly />
+
+      <select id="postOffice" name="post_office" required>
+        <option value="">Select Post Office</option>
+      </select>
+      <label>Profile Image</label>
+      <input type="file" name="profile_photo" accept="image/*" />
+
+      <button class="btn full">Finish</button>
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, msg in messages %}
+      <div class="flash-msg flash-{{ category }}">{{ msg }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+    </form>
+  </body>
+</html>

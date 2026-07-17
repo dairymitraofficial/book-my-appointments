@@ -1,0 +1,33 @@
+{% extends "customer/layout.html" %}
+{% block title %}My Account{% endblock %}
+
+{% block content %}
+<div class="card profile">
+
+  {% if profile.profile_photo %}
+    <img
+      class="avatar-large"
+      src="/static/uploads/customer_profiles/{{ profile.profile_photo }}"
+      alt="Profile Image"
+    />
+  {% else %}
+    <img
+      class="avatar-large"
+      src="/static/uploads/customer_profiles/default.png"
+      alt="Default Image"
+    />
+  {% endif %}
+
+  <div>
+    <h2>{{ profile.full_name }}</h2>
+    <p class="small">{{ profile.address }}</p>
+  </div>
+
+</div>
+
+<div class="card">
+  <a href="/customer/account/requests" class="btn full">
+    Your Requests
+  </a>
+</div>
+{% endblock %}

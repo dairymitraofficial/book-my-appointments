@@ -1,0 +1,93 @@
+{% extends "owner/layout.html" %}
+{% block title %}My Schedule{% endblock %}
+
+{% block content %}
+
+<h2 style="text-align:center;margin-bottom:14px;">My Schedule</h2>
+
+<!-- FILTER BAR -->
+<div class="card filter-bar" style="margin-bottom:16px;">
+
+  <input
+    type="text"
+    id="searchText"
+    placeholder="Search by name or address"
+    oninput="filterSchedule()"
+    class="filter-input wide"
+  />
+
+  <input
+    type="date"
+    id="filterDate"
+    onchange="filterSchedule()"
+    class="filter-input"
+  />
+
+</div>
+
+{% if schedules and schedules|length > 0 %}
+
+  {% for s in schedules %}
+    <div
+      class="card schedule-card"
+      style="margin-bottom:12px;"
+      data-name="{{ s.customer_name | lower }}"
+      data-address="{{ s.customer_address | lower }}"
+      data-date="{{ s.booking_date }}"
+    >
+
+      <h3>{{ s.customer_name }}</h3>
+
+      <p class="small">
+        📅 <b>{{ s.booking_date }}</b>
+      </p>
+
+      <p class="small">
+        🧾 {{ s.service_name }}
+      </p>
+
+      <p class="small">
+        📍 {{ s.customer_address }}
+      </p>
+
+    </div>
+  {% endfor %}
+
+{% else %}
+
+  <div class="card">
+    <p class="small" style="text-align:center;">
+      No confirmed bookings yet.
+    </p>
+  </div>
+
+{% endif %}
+
+<!-- FILTER SCRIPT -->
+<script>
+function filterSchedule() {
+  const search = document.getElementById("searchText").value.toLowerCase();
+  const selectedDate = document.getElementById("filterDate").value;
+
+  const cards = document.querySelectorAll(".schedule-card");
+
+  cards.forEach(card => {
+    const name = card.dataset.name;
+    const address = card.dataset.address;
+    const date = card.dataset.date;
+
+    const matchText =
+      !search ||
+      name.includes(search) ||
+      address.includes(search);
+
+    const matchDate =
+      !selectedDate || date === selectedDate;
+
+    card.style.display =
+      matchText && matchDate ? "block" : "none";
+  });
+}
+</script>
+
+{% endblock %}

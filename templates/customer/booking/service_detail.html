@@ -1,0 +1,87 @@
+{% extends "customer/layout.html" %} {% block title %}{{ service.service_name
+}}{% endblock %} {% block content %}
+<div class="card">
+  <h2>{{ service.service_name }}</h2>
+  <p class="small">{{ service.business_name }}</p>
+</div>
+
+<div class="card carousel" id="carousel">
+  {% for img in images %}
+  <img
+    src="{{ url_for('static', filename=img.image_path) }}"
+    class="{% if loop.index0 == 0 %}active{% endif %}"
+    loading="lazy"
+    draggable="false"
+  />
+  {% endfor %} {% if images|length > 1 %}
+  <button class="nav-btn prev" onclick="prevImg()">‹</button>
+  <button class="nav-btn next" onclick="nextImg()">›</button>
+  {% endif %}
+
+  <div class="counter" id="counter">1 / {{ images|length }}</div>
+</div>
+
+<div class="card">
+  <div class="price">₹{{ service.price }}</div>
+  <p>{{ service.description }}</p>
+</div>
+
+<div class="card">
+  <form method="post" action="/customer/book/{{ service.id }}"  onsubmit="showLoader('Sending booking request...')">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <label>Select Booking Date</label>
+    <input type="text" id="bookingDate" name="booking_date" required readonly />
+
+    <button type="submit" class="btn full">Book Now</button>
+  </form>
+</div>
+<script
+  src="{{ url_for('static', filename='js/customer_carousel.js') }}"
+  defer
+></script>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const dateInput = document.querySelector("input[type='date']");
+    if (!dateInput) return;
+
+    const today = new Date().toISOString().split("T")[0];
+
+    // ✅ Disable past dates
+    dateInput.min = today;
+
+    const serviceId = "{{ service.id }}";
+
+    // ✅ Fetch accepted (disabled) dates
+    fetch(`/customer/service/${serviceId}/disabled-dates`)
+      .then((res) => res.json())
+      .then((disabledDates) => {
+        dateInput.addEventListener("input", () => {
+          if (disabledDates.includes(dateInput.value)) {
+            alert("This date is already booked");
+            dateInput.value = "";
+          }
+        });
+      });
+  });
+</script>
+<script src="https://cdn.jsdelivr.net/npm/flatpickr"></script>
+<script>
+document.addEventListener("DOMContentLoaded", () => {
+  const serviceId = "{{ service.id }}";
+
+  fetch(`/customer/service/${serviceId}/disabled-dates`)
+    .then(res => res.json())
+    .then(disabledDates => {
+
+      flatpickr("#bookingDate", {
+        minDate: "today",          // ✅ past dates disabled
+        disable: disabledDates,    // ✅ booked dates disabled
+        dateFormat: "Y-m-d",
+        disableMobile: true
+      });
+
+    });
+});
+</script>
+
+{% endblock %}

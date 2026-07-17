@@ -1,0 +1,34 @@
+{% extends "owner/layout.html" %}
+{% block title %}Owner Bookings{% endblock %}
+
+{% block content %}
+<h2>Bookings</h2>
+
+{% for b in bookings %}
+  <div class="card" style="margin-bottom:12px;">
+    <h3>{{ b.service_name }}</h3>
+
+    <p class="small">Customer: {{ b.customer_name }}</p>
+    <p class="small">Email: {{ b.email }}</p>
+    <p>Date: {{ b.booking_date }}</p>
+    <p class="price">₹{{ b.price }}</p>
+
+    {% if b.status == 'pending' %}
+      <form method="post" action="/owner/booking/{{ b.id }}/accepted">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn full">Accept</button>
+      </form>
+
+      <form method="post" action="/owner/booking/{{ b.id }}/rejected" style="margin-top:6px;">
+        <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+        <button class="btn danger full">Reject</button>
+      </form>
+
+    {% elif b.status == 'accepted' %}
+      <p style="color:green;">✅ Accepted</p>
+    {% else %}
+      <p style="color:red;">❌ Rejected</p>
+    {% endif %}
+  </div>
+{% endfor %}
+{% endblock %}

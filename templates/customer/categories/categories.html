@@ -1,0 +1,30 @@
+{% extends "customer/layout.html" %}
+{% block title %}Search{% endblock %}
+
+{% block content %}
+
+<!-- 🔍 SEARCH BAR -->
+<form action="/customer/search/results" method="get" class="card">
+  <input
+    type="text"
+    name="q"
+    placeholder="Search owner, business or category"
+    style="width:100%; padding:12px; font-size:16px;"
+    required
+  />
+</form>
+
+<!-- 📂 CATEGORY GRID -->
+<div class="card">
+  <h3>Browse Categories</h3>
+
+  <div class="grid-2">
+    {% for c in categories %}
+    <a class="category-card" href="/customer/owners/{{ c.id }}">
+      <h4>{{ c.name }}</h4>
+    </a>
+    {% endfor %}
+  </div>
+</div>
+
+{% endblock %}

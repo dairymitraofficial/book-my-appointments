@@ -1,0 +1,88 @@
+{% extends "layouts/public_layout.html" %}
+
+{% block content %}
+
+<div class="card">
+  <h2>Contact Us</h2>
+
+  <p>
+    We’re here to help you. If you have any questions, feedback,
+    or suggestions about <b>Book My Appointment</b>, feel free to reach out.
+  </p>
+</div>
+
+<div class="card">
+  <h3>Email Support</h3>
+
+  <p class="small">
+    For general inquiries, technical support, or feedback,
+    please contact us at:
+  </p>
+
+  <p style="font-weight:600; margin-top:6px;">
+    📧 yourmail@gmail.com
+  </p>
+
+  <p class="small" style="margin-top:8px;">
+    We usually respond within 24–48 hours on working days.
+  </p>
+</div>
+
+<div class="card">
+  <h3>Feedback & Suggestions</h3>
+
+  <p class="small">
+    Your feedback helps us improve the platform.
+    If you are a registered user, please send feedback
+    using your registered email address for faster support.
+  </p>
+</div>
+
+<div class="card">
+  <h3>Business & Partnership</h3>
+
+  <p class="small">
+    If you are interested in partnering with us or using
+    Book My Appointment for your business, feel free to contact us.
+  </p>
+</div>
+
+<div class="card">
+  <h3>Note</h3>
+
+  <p class="small">
+    Please avoid sharing sensitive personal information
+    such as passwords or OTPs via email.
+  </p>
+</div>
+<div class="card">
+  <h3>Contact Support</h3>
+
+  <p class="small">
+    Tell us your problem or share your feedback.
+    Your message will be sent using your registered email.
+  </p>
+
+  <form method="post" action="/contact/send">
+
+  <input
+    type="text"
+    name="subject"
+    placeholder="Subject (Booking issue / Feedback / Bug)"
+    required
+  >
+
+  <textarea
+    name="message"
+    placeholder="Describe your issue or feedback..."
+    rows="4"
+    required
+  ></textarea>
+
+  <button class="btn full">Send Message</button>
+
+</form>
+
+</div>
+
+{% endblock %}

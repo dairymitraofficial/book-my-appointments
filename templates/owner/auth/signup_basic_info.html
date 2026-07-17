@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Owner Info</title>
+    <link rel="stylesheet" href="/static/css/instagram.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <script src="/static/js/pincode.js" defer></script>
+  </head>
+
+  <body class="center">
+    <form method="post" enctype="multipart/form-data" class="card" style="width:100%; max-width:420px;" onsubmit="showLoader('Saving  info...')" >
+      <h2 style="text-align:center;">Business Details</h2>
+
+      <input name="full_name" placeholder="Full Name" required
+        value="{{ profile.full_name if profile else '' }}">
+
+      <input name="business_name" placeholder="Business Name" required
+        value="{{ profile.business_name if profile else '' }}">
+
+      <select name="category_id" id="categorySelect" required onchange="toggleOtherCategory()">
+        <option value="">Select Category</option>
+        {% for c in categories %}
+          <option value="{{ c.id }}"
+            {% if profile and profile.category_id == c.id %}selected{% endif %}>
+            {{ c.name }}
+          </option>
+        {% endfor %}
+        <option value="other">Other</option>
+      </select>
+
+      <input type="text" name="custom_category" id="customCategoryInput"
+        placeholder="Enter your category"
+        style="display:none; margin-top:10px;">
+
+    <input name="building" placeholder="Building / House No" required
+  value="{{ (profile.building if profile else '') | default('', true) }}">
+
+<input name="area" placeholder="Road / Area" required
+  value="{{ (profile.area if profile else '') | default('', true) }}">
+
+<input name="pincode" placeholder="Pincode" maxlength="6" required
+  onkeyup="fetchPincode(this.value)"
+  value="{{ (profile.pincode if profile else '') | default('', true) }}">
+
+<input id="state" name="state" placeholder="State" readonly
+  value="{{ (profile.state if profile else '') | default('', true) }}">
+
+<input id="district" name="district" placeholder="District" readonly
+  value="{{ (profile.district if profile else '') | default('', true) }}">
+
+      <select id="postOffice" name="post_office" required>
+        <option value="">Select Village</option>
+        {% if profile and profile.post_office %}
+          <option selected value="{{ profile.post_office }}">
+            {{ profile.post_office }}
+          </option>
+        {% endif %}
+      </select>
+
+      <textarea name="description" placeholder="About you & your business">
+{{ (profile.description if profile else '') | default('', true) }}
+</textarea>
+
+      <label>Upload Logo</label>
+      <input type="file" name="profile_photo" accept="image/*">
+
+      <button class="btn full">Save</button>
+    </form>
+
+    <script>
+      function toggleOtherCategory() {
+        const select = document.getElementById("categorySelect");
+        const otherInput = document.getElementById("customCategoryInput");
+
+        if (select.value === "other") {
+          otherInput.style.display = "block";
+          otherInput.required = true;
+        } else {
+          otherInput.style.display = "none";
+          otherInput.required = false;
+          otherInput.value = "";
+        }
+      }
+    </script>
+  </body>
+</html>

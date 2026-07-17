@@ -1,0 +1,20 @@
+{% extends "customer/layout.html" %}
+{% block title %}Select Date{% endblock %}
+
+{% block content %}
+<div class="card cal-wrap">
+  <div class="cal-head">
+    <span class="nav" onclick="prevMonth()">‹</span>
+    <h3 id="monthLabel"></h3>
+    <span class="nav" onclick="nextMonth()">›</span>
+  </div>
+
+  <div class="cal-grid" id="calendar"></div>
+
+  <form method="post" action="/customer/book/{{ service_id }}">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+    <input type="hidden" name="date" id="selectedDate" />
+    <button class="btn full" id="confirmBtn" disabled>Confirm</button>
+  </form>
+</div>
+{% endblock %}

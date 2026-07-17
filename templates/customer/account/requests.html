@@ -1,0 +1,31 @@
+{% extends "customer/layout.html" %} {% block title %}Your Requests{% endblock
+%} {% block content %}
+<h2 style="margin-bottom: 12px">Your Requests</h2>
+
+{% if bookings and bookings|length > 0 %} {% for b in bookings %}
+<div class="card booking-card">
+
+  <h3>{{ b.business_name }}</h3>
+  <p class="small">{{ b.service_name }}</p>
+
+  <p class="small">
+    📅 Booking Date: <b>{{ b.booking_date }}</b>
+  </p>
+
+  <div class="status-row">
+    {% if b.status == "pending" %}
+      <span class="status pending">Pending</span>
+    {% elif b.status == "accepted" %}
+      <span class="status accepted">Accepted</span>
+    {% else %}
+      <span class="status rejected">Rejected</span>
+    {% endif %}
+  </div>
+
+</div>
+
+{% endfor %} {% else %}
+<div class="card">
+  <p>No booking requests yet.</p>
+</div>
+{% endif %} {% endblock %}

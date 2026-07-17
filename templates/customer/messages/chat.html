@@ -1,0 +1,89 @@
+{% extends "customer/layout.html" %}
+{% block title %}Chat{% endblock %}
+
+{% block content %}
+
+<div class="chat-wrapper">
+
+  <div class="chat-box" id="chatBox">
+    {% for m in messages %}
+      <div class="msg {% if m.sender == 'customer' %}me{% else %}other{% endif %}">
+        {{ m.message }}
+      </div>
+    {% endfor %}
+  </div>
+
+  <form method="post" class="chat-input">
+    <input name="message" placeholder="Type message…" required>
+    <button>Send</button>
+  </form>
+
+</div>
+
+<script>
+  const conversationId = "{{ conversation_id }}";
+  let loading = false;
+  let lastCount = 0;
+  let firstLoad = true;
+
+  function isUserAtBottom(box) {
+    return box.scrollHeight - box.scrollTop <= box.clientHeight + 20;
+  }
+
+  async function loadMessages() {
+    if (loading) return;
+    loading = true;
+
+    try {
+      const res = await fetch(`/chat/poll/${conversationId}`);
+      if (!res.ok) return;
+
+      const data = await res.json();
+      const box = document.getElementById("chatBox");
+      if (!box) return;
+
+      if (data.messages.length === lastCount) return;
+
+      const shouldAutoScroll =
+        firstLoad || isUserAtBottom(box);
+
+      box.innerHTML = "";
+
+      data.messages.forEach(m => {
+        const d = document.createElement("div");
+        d.className = "msg " + (m.sender === "customer" ? "me" : "other");
+
+        let tick = "";
+        if (m.sender === "customer") {
+          if (m.status === "sent") tick = " ✓";
+          else if (m.status === "delivered") tick = " ✓✓";
+          else if (m.status === "seen")
+            tick = " <span style='color:#2196f3'>✓✓</span>";
+        }
+
+        d.innerHTML = m.message + tick;
+        box.appendChild(d);
+      });
+
+      lastCount = data.messages.length;
+
+      if (shouldAutoScroll) {
+        box.scrollTop = box.scrollHeight;
+      }
+
+      firstLoad = false;
+
+    } finally {
+      loading = false;
+    }
+  }
+
+  document.addEventListener("DOMContentLoaded", () => {
+    loadMessages();
+    setInterval(loadMessages, 700);
+  });
+</script>
+
+
+
+{% endblock %}

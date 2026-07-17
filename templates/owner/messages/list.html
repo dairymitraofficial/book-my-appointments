@@ -1,0 +1,15 @@
+{% extends "owner/layout.html" %}
+{% block title %}Messages{% endblock %}
+
+{% block content %}
+<h3 style="text-align:center;">Messages</h3>
+
+{% for c in chats %}
+  <a href="/owner/chat/{{ c.conversation_id }}" class="card">
+    <b>{{ c.customer_name }}</b><br>
+    <span class="small">{{ c.last_message }}</span>
+  </a>
+{% else %}
+  <p class="small">No messages yet</p>
+{% endfor %}
+{% endblock %}

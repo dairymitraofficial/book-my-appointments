@@ -1,0 +1,96 @@
+{% extends "owner/layout.html" %} {% block title %}Chat{% endblock %} {% block
+content %}
+<div class="chat-wrapper">
+  <div class="chat-box" id="chatBox">
+    {% for m in messages %}
+    <div class="msg {% if m.sender == 'owner' %}me{% else %}other{% endif %}">
+      {{ m.message }}
+    </div>
+    {% endfor %}
+  </div>
+
+  <form method="post" class="chat-input">
+    <input name="message" placeholder="Type reply…" required />
+    <button>Send</button>
+  </form>
+</div>
+
+<script>
+    const conversationId = "{{ conversation_id }}";
+    let loading = false;
+    let lastCount = {{ messages|length }};
+    let firstLoad = true;
+
+    function isUserAtBottom(box) {
+      return box.scrollHeight - box.scrollTop <= box.clientHeight + 20;
+    }
+
+    async function loadMessages() {
+      if (loading) return;
+      loading = true;
+
+      try {
+        const res = await fetch(`/chat/poll/${conversationId}`);
+        if (!res.ok) return;
+
+        const data = await res.json();
+        const box = document.getElementById("chatBox");
+        if (!box) return;
+
+        if (data.messages.length === lastCount) return;
+
+        const shouldAutoScroll =
+          firstLoad || isUserAtBottom(box);
+
+        box.innerHTML = "";
+
+   data.messages.forEach(m => {
+    const d = document.createElement("div");
+    d.className = "msg " + (m.sender === "owner" ? "me" : "other");
+
+    // message text
+    const text = document.createElement("span");
+    text.textContent = m.message;
+    d.appendChild(text);
+
+    // tick (ONLY for owner-sent messages)
+    if (m.sender === "owner") {
+      const t = document.createElement("span");
+t.className = "msg-tick";
+
+      t.style.marginLeft = "6px";
+      t.style.fontSize = "12px";
+      t.style.verticalAlign = "bottom";
+
+      if (m.status === "sent") {
+        t.textContent = "✓";
+      } else if (m.status === "delivered") {
+        t.textContent = "✓✓";
+      } else if (m.status === "seen") {
+        t.textContent = "✓✓";
+        t.style.color = "#2196f3";
+        t.style.fontWeight = "600";
+      }
+
+      d.appendChild(t);
+    }
+
+    box.appendChild(d);
+  });
+
+
+        lastCount = data.messages.length;
+        if (shouldAutoScroll) box.scrollTop = box.scrollHeight;
+        firstLoad = false;
+
+      } finally {
+        loading = false;
+      }
+    }
+
+    document.addEventListener("DOMContentLoaded", () => {
+      loadMessages();
+      setInterval(loadMessages, 700);
+    });
+</script>
+{% endblock %}

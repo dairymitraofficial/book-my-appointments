@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>BMA</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="/static/css/instagram.css">
+</head>
+
+<body>
+  <div class="app">
+
+    {% include "partials/top_nav.html" %}
+
+    <div class="page-content">
+      {% block content %}{% endblock %}
+    </div>
+
+  </div>
+</body>
+</html>

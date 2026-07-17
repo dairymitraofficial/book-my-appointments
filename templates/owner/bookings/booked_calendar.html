@@ -1,0 +1,22 @@
+{% extends "owner/layout.html" %}
+{% block title %}Bookings{% endblock %}
+
+{% block content %}
+<div class="card">
+  <h3>Bookings</h3>
+
+  <div class="date-grid">
+    {% for d in dates %}
+      {% set date_str = d.booking_date.strftime('%Y-%m-%d') %}
+      <div class="date-box"
+           onclick="loadBookings('{{ date_str }}')">
+        {{ date_str }}
+      </div>
+    {% endfor %}
+  </div>
+</div>
+
+<div id="bookingDetails"></div>
+
+<script src="{{ url_for('static', filename='js/bookings.js') }}" defer></script>
+{% endblock %}

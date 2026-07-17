@@ -1,0 +1,73 @@
+{% extends "customer/layout.html" %}
+{% block title %}Owner Profile{% endblock %}
+
+{% block content %}
+<div class="card profile">
+  {% if owner.profile_photo %}
+    <img class="avatar-large"
+         src="{{ url_for('static', filename='uploads/owner_profiles/' + owner.profile_photo) }}">
+  {% else %}
+    <img class="avatar-large"
+         src="{{ url_for('static', filename='uploads/owner_profiles/default.png') }}">
+  {% endif %}
+  
+  <div>
+    <h2>{{ owner.business_name }}</h2>
+    <p class="small">{{ owner.full_name }}</p>
+    <p class="small">{{ owner.address }}</p>
+    <p>{{ owner.description }}</p>
+  </div>
+  <form action="/customer/message/start/{{ owner.owner_id }}" method="post">
+ <button class="msg-btn">
+  <span class="msg-dot"></span>
+  <span class="msg-text">Message</span>
+</button>
+
+
+</form>
+
+</div>
+
+<div class="tabs">
+  <div class="tab active" onclick="showTab('posts')">All Post</div>
+  <div class="tab" onclick="showTab('info')">Info</div>
+</div>
+
+<div id="posts" class="tab-content grid-3">
+  {% for s in services %}
+  <a href="/customer/service/{{ s.id }}" class="service-post">
+
+    {% if s.thumb %}
+      <img class="service-img"
+           src="{{ url_for('static', filename=s.thumb) }}"
+           loading="lazy">
+    {% else %}
+      <img class="service-img"
+           src="{{ url_for('static', filename='uploads/service_images/default.jpg') }}"
+           loading="lazy">
+    {% endif %}
+
+    <div class="service-name">{{ s.service_name }}</div>
+    <div class="price-box">
+        <span class="original-price">₹{{ s.original_price }}</span>
+        <span class="current-price">₹{{ s.price }}</span>
+
+        {% if s.original_price > s.price %}
+          <span class="discount">
+            {{ ((s.original_price - s.price) * 100 // s.original_price) }}% OFF
+          </span>
+        {% endif %}
+      </div>
+  </a>
+  {% endfor %}
+</div>
+
+<div id="info" class="tab-content" style="display:none">
+  <div class="card">
+    <p><b>Name:</b> {{ owner.full_name }}</p>
+    <p><b>Business:</b> {{ owner.business_name }}</p>
+    <p><b>Address:</b> {{ owner.address }}</p>
+    <p><b>Description:</b> {{ owner.description }}</p>
+  </div>
+</div>
+{% endblock %}

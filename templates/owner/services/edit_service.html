@@ -1,0 +1,42 @@
+{% extends "owner/layout.html" %}
+{% block title %}Edit Service{% endblock %}
+
+{% block content %}
+<div class="card edit-service-card">
+
+  <h2>Edit Service</h2>
+
+  <form method="post" class="edit-service-form">
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <label>Service Name</label>
+    <input
+      name="service_name"
+      value="{{ service.service_name }}"
+      required
+    >
+
+    <label>Original Price</label>
+    <input
+      type="number"
+      name="original_price"
+      value="{{ service.original_price }}"
+      required
+    >
+
+    <label>Current Price</label>
+    <input
+      type="number"
+      name="price"
+      value="{{ service.price }}"
+      required
+    >
+
+    <label>Description</label>
+    <textarea name="description">{{ service.description }}</textarea>
+
+    <button class="btn full">Save</button>
+  </form>
+
+</div>
+{% endblock %}

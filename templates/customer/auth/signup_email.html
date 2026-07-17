@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Customer Signup</title>
+    <link rel="stylesheet" href="/static/css/instagram.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body class="center">
+    <form method="post" class="card" style="width: 100%; max-width: 360px">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <h2 style="text-align: center">Signup</h2>
+
+      <input
+        type="email"
+        name="email"
+        placeholder="Enter your email"
+        required
+      />
+
+      <button class="btn full">Send OTP</button>
+
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, msg in messages %}
+      <div class="flash-msg flash-{{ category }}">{{ msg }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <p class="small" style="text-align: center; margin-top: 12px">
+        Already have an account?
+        <a style="color: rgb(0, 106, 255)" href="/customer/login">Login</a>
+      </p>
+    </form>
+  </body>
+</html>

@@ -1,0 +1,35 @@
+{% extends "customer/layout.html" %}
+{% block title %}Available Professionals{% endblock %}
+
+{% block content %}
+<h2>Available Professionals</h2>
+
+<div class="grid-2">
+  {% for o in owners %}
+  <a class="card owner-card" href="/customer/owner/{{ o.owner_id }}">
+
+    {% if o.profile_photo and o.profile_photo|length > 0 %}
+      <img
+        class="avatar"
+        loading="lazy"
+        src="/static/uploads/owner_profiles/{{ o.profile_photo }}"
+        alt="Owner Image"
+      />
+    {% else %}
+      <img
+        class="avatar"
+        loading="lazy"
+        src="/static/uploads/owner_profiles/default.png"
+        alt="Default Image"
+      />
+    {% endif %}
+
+    <div>
+      <h3>{{ o.business_name }}</h3>
+      <p class="small">{{ o.address }}</p>
+    </div>
+
+  </a>
+  {% endfor %}
+</div>
+{% endblock %}

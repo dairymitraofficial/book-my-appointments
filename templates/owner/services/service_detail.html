@@ -1,0 +1,100 @@
+{% extends "owner/layout.html" %}
+{% block title %}{{ service.service_name }}{% endblock %}
+
+{% block content %}
+<div class="app">
+
+  <!-- ================= SERVICE CARD ================= -->
+  <div class="card">
+    <h2>{{ service.service_name }}</h2>
+
+    <!-- IMAGE CAROUSEL -->
+    <div class="carousel" id="carousel">
+      {% for img in images %}
+        <img
+          src="{{ url_for('static', filename=img.image_path) }}"
+          loading="lazy"
+          draggable="false"
+          class="{% if loop.index0 == 0 %}active{% endif %}"
+        />
+      {% endfor %}
+
+      {% if images|length > 1 %}
+        <button class="nav-btn prev" onclick="prevImg()">‹</button>
+        <button class="nav-btn next" onclick="nextImg()">›</button>
+      {% endif %}
+
+      <div class="counter" id="counter">1 / {{ images|length }}</div>
+    </div>
+
+    <!-- 🔥 PRICE + DISCOUNT -->
+    <div class="price-box">
+      <span class="original-price">₹{{ service.original_price }}</span>
+      <span class="current-price">₹{{ service.price }}</span>
+
+      {% if service.original_price > service.price %}
+        <span class="discount">
+          {{ ((service.original_price - service.price) * 100 // service.original_price) }}% OFF
+        </span>
+      {% endif %}
+    </div>
+
+    <p>{{ service.description }}</p>
+  </div>
+
+  <!-- ================= ACTIONS ================= -->
+  <div class="card">
+    <a href="/owner/service/{{ service.id }}/edit" class="btn full">
+      Edit Post
+    </a>
+
+    <form
+      method="post"
+      action="/owner/service/{{ service.id }}/delete"
+      onsubmit="return confirm('Delete this post?')"
+      style="margin-top: 8px;"
+    >
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+      <button class="btn danger full">Delete Post</button>
+    </form>
+  </div>
+
+</div>
+
+<!-- ================= CAROUSEL SCRIPT ================= -->
+<script>
+  const imgs = document.querySelectorAll("#carousel img");
+  const counter = document.getElementById("counter");
+  let index = 0;
+
+  function show(i) {
+    imgs.forEach(img => img.classList.remove("active"));
+    imgs[i].classList.add("active");
+    counter.innerText = (i + 1) + " / " + imgs.length;
+  }
+
+  function nextImg() {
+    index = (index + 1) % imgs.length;
+    show(index);
+  }
+
+  function prevImg() {
+    index = (index - 1 + imgs.length) % imgs.length;
+    show(index);
+  }
+
+  let startX = 0;
+  const carousel = document.getElementById("carousel");
+
+  carousel.addEventListener("touchstart", e => {
+    startX = e.touches[0].clientX;
+  });
+
+  carousel.addEventListener("touchend", e => {
+    const diff = e.changedTouches[0].clientX - startX;
+    if (Math.abs(diff) > 50) {
+      diff < 0 ? nextImg() : prevImg();
+    }
+  });
+</script>
+{% endblock %}

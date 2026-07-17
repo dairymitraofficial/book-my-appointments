@@ -1,0 +1,46 @@
+<!-- ================= TOP NAV BAR ================= -->
+<header class="top-nav">
+  <div class="top-nav-inner">
+
+    <!-- LEFT : LOGO -->
+    <div class="nav-left">
+      <img src="/static/icons/bma_app_192.png" class="nav-logo" alt="BMA Logo">
+    </div>
+
+    <!-- CENTER : TITLE -->
+    <div class="nav-center">
+      Book My Appointment
+    </div>
+
+    <!-- RIGHT : MENU -->
+    <div class="nav-right">
+      <button class="menu-btn" onclick="openMenu()">☰</button>
+    </div>
+
+  </div>
+</header>
+
+<!-- ================= MENU MODAL ================= -->
+<div id="menuModal" class="menu-modal">
+  <div class="menu-sheet">
+    <button class="close-btn" onclick="closeMenu()">✕</button>
+
+    <a href="/about">About</a>
+    <a href="/learn">Learn</a>
+    <a href="/contact">Contact</a>
+    <a href="/rating">Rating</a>
+
+    <hr>
+
+    <a href="/logout" class="danger">Logout</a>
+  </div>
+</div>
+
+<script>
+function openMenu() {
+  document.getElementById("menuModal").classList.add("show");
+}
+function closeMenu() {
+  document.getElementById("menuModal").classList.remove("show");
+}
+</script>

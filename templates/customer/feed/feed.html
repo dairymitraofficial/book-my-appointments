@@ -1,0 +1,81 @@
+{% extends "customer/layout.html" %}
+{% block title %}Feed{% endblock %}
+
+{% block head %}
+<link rel="stylesheet" href="/static/css/feed.css" />
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    document.body.classList.add("feed-mode");
+  });
+</script>
+{% endblock %}
+
+{% block content %}
+
+<div class="feed-root">
+
+  <div class="reels-container">
+
+    {% for p in posts %}
+    <div class="reel">
+
+      <!-- MEDIA (DOUBLE TAP ZONE) -->
+      <div class="reel-media"
+           ondblclick="doubleTapLike(this, {{ p.service_id }})">
+
+        <img
+          src="/static/{{ p.image }}"
+          class="reel-image"
+          loading="lazy"
+        >
+
+        <!-- BIG HEART FOR ANIMATION -->
+        <div class="big-heart">❤️</div>
+      </div>
+
+      <!-- OVERLAY -->
+      <div class="reel-overlay">
+
+        <!-- TOP OWNER -->
+        <div class="reel-top">
+          <a href="/customer/owner/{{ p.owner_id }}">
+            <img
+              src="/static/uploads/owner_profiles/{{ p.profile_photo or 'default.png' }}"
+              class="reel-avatar"
+            >
+            <span>{{ p.business_name }}</span>
+          </a>
+        </div>
+
+        <!-- RIGHT ACTIONS -->
+        <div class="reel-actions">
+          <button
+            class="like-btn"
+            data-id="{{ p.service_id }}"
+            data-liked="{{ '1' if p.liked else '0' }}"
+            onclick="toggleLike(this)">
+            <span class="heart">
+              {{ '❤️' if p.liked else '🤍' }}
+            </span>
+            <small id="likes-{{ p.service_id }}">
+              {{ p.like_count }}
+            </small>
+          </button>
+        </div>
+
+        <!-- BOTTOM INFO -->
+        <div class="reel-bottom">
+          <b>{{ p.service_name }}</b>
+          <div class="price">₹{{ p.price }}</div>
+        </div>
+
+      </div>
+    </div>
+    {% endfor %}
+
+  </div>
+
+</div>
+
+<script src="/static/js/feed.js"></script>
+{% endblock %}

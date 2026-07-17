@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Customer Login</title>
+    <link rel="stylesheet" href="/static/css/instagram.css" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  </head>
+  <body class="center">
+    <form method="post" class="card" style="width: 100%; max-width: 360px" onsubmit="showLoader('Logging in...')">
+      <input type="hidden" name="csrf_token" value="{{ csrf_token() }}" />
+
+      <h2 style="text-align: center">Login</h2>
+
+      <input type="email" name="email" placeholder="Email" required />
+      <input type="password" name="password" placeholder="Password" required />
+
+      <button class="btn full">Login</button>
+      {% with messages = get_flashed_messages(with_categories=true) %} {% if
+      messages %} {% for category, msg in messages %}
+      <div class="flash-msg flash-{{ category }}">{{ msg }}</div>
+      {% endfor %} {% endif %} {% endwith %}
+
+      <p class="small" style="text-align: center; margin-top: 12px">
+        I don’t have an account?
+        <a style="color: rgb(0, 106, 255)" href="/customer/signup/email">Signup</a>
+      </p>
+    </form>
+  </body>
+</html>

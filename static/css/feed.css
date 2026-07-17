@@ -1,0 +1,252 @@
+/* =====================================
+   RESET + BASE
+===================================== */
+
+html, body {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  background: #000;
+  color: #fff;
+  overscroll-behavior: none;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI",
+               Roboto, Helvetica, Arial, sans-serif;
+}
+
+/* =====================================
+   FEED MODE (REMOVE APP CONSTRAINTS)
+===================================== */
+
+body.feed-mode .top-nav {
+  display: none !important;
+}
+
+body.feed-mode .app {
+  max-width: none !important;
+  padding: 0 !important;
+}
+
+body.feed-mode .page-content {
+  padding: 0 !important;
+}
+
+/* =====================================
+   GLOBAL VARIABLES
+===================================== */
+
+:root {
+  --bottom-nav-h: 64px; /* 🔥 change only here if nav height changes */
+}
+
+/* =====================================
+   ROOT FULL WIDTH FIX
+===================================== */
+
+.feed-root {
+  width: 100vw;
+  margin: 0;
+  padding: 0;
+}
+
+/* =====================================
+   REELS CONTAINER
+===================================== */
+
+.reels-container {
+  width: 100vw;
+  height: calc(100vh - var(--bottom-nav-h));
+
+  overflow-y: auto;
+  scroll-snap-type: y mandatory;
+  scroll-behavior: smooth;
+
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+
+  background: #000;
+}
+
+/* =====================================
+   SINGLE REEL (ONE SCREEN)
+===================================== */
+
+.reel {
+  position: relative;
+
+  width: 100vw;
+  height: calc(100vh - var(--bottom-nav-h));
+
+  scroll-snap-align: start;
+  scroll-snap-stop: always;
+
+  background: #000;
+}
+
+/* =====================================
+   MEDIA
+===================================== */
+
+.reel-media {
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.reel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;   /* 🔥 keeps ratio */
+  background: #000;
+}
+
+/* =====================================
+   DOUBLE TAP HEART
+===================================== */
+
+.big-heart {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+
+  font-size: 90px;
+  transform: translate(-50%, -50%) scale(0);
+  opacity: 0;
+
+  pointer-events: none;
+}
+
+.big-heart.show {
+  animation: heart-pop 0.8s ease forwards;
+}
+
+@keyframes heart-pop {
+  0% {
+    transform: translate(-50%, -50%) scale(0.2);
+    opacity: 0;
+  }
+  30% {
+    transform: translate(-50%, -50%) scale(1.4);
+    opacity: 1;
+  }
+  100% {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 0;
+  }
+}
+
+/* =====================================
+   OVERLAY (SAFE ABOVE NAV)
+===================================== */
+
+.reel-overlay {
+  position: absolute;
+  inset: 0;
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+
+  padding: 14px;
+  padding-bottom: calc(var(--bottom-nav-h) + 16px);
+
+  color: #fff;
+  pointer-events: none;
+
+  background: linear-gradient(
+    to top,
+    rgba(0,0,0,0.7),
+    rgba(0,0,0,0.15),
+    rgba(0,0,0,0.7)
+  );
+}
+
+/* =====================================
+   TOP OWNER INFO
+===================================== */
+
+.reel-top {
+  pointer-events: auto;
+}
+
+.reel-top a {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+
+  color: #fff;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.reel-avatar {
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  object-fit: cover;
+}
+
+/* =====================================
+   RIGHT ACTIONS (LIKE)
+===================================== */
+
+.reel-actions {
+  position: absolute;
+  right: 14px;
+  bottom: calc(var(--bottom-nav-h) + 90px);
+
+  pointer-events: auto;
+}
+
+.like-btn {
+  background: none;
+  border: none;
+  color: #fff;
+
+  cursor: pointer;
+  text-align: center;
+}
+
+.like-btn .heart {
+  font-size: 32px;
+  line-height: 1;
+}
+
+.like-btn small {
+  display: block;
+  margin-top: 4px;
+  font-size: 12px;
+  opacity: 0.9;
+}
+
+/* =====================================
+   BOTTOM SERVICE INFO
+===================================== */
+
+.reel-bottom {
+  font-size: 15px;
+}
+
+.reel-bottom b {
+  font-weight: 600;
+}
+
+.reel-bottom .price {
+  font-size: 14px;
+  opacity: 0.9;
+}
+
+/* =====================================
+   DESKTOP LIMIT (CENTER)
+===================================== */
+
+@media (min-width: 768px) {
+  .reel {
+    max-width: 420px;
+    margin: 0 auto;
+  }
+
+  .reels-container {
+    display: flex;
+    justify-content: center;
+  }
+}

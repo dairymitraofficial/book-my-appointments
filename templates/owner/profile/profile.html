@@ -1,0 +1,128 @@
+{% extends "owner/layout.html" %}
+{% block title %}Owner Profile{% endblock %}
+
+{% block content %}
+
+<!-- ================= PROFILE CARD ================= -->
+<div class="card profile">
+  <img
+    class="avatar-large"
+    src="{{ url_for('static', filename='uploads/owner_profiles/' ~ (profile.profile_photo or 'default.png')) }}"
+  >
+
+  <div>
+    <h2>{{ profile.business_name }}</h2>
+    <p class="small">{{ profile.full_name }}</p>
+    <p class="small">{{ profile.address }}</p>
+    <p>{{ profile.description }}</p>
+  </div>
+
+  <a href="/owner/profile/edit" class="btn outline">
+    Edit Profile
+  </a>
+</div>
+
+<!-- ================= TABS ================= -->
+<div class="tabs">
+  <div class="tab active" data-tab="posts">My Post</div>
+  <div class="tab" data-tab="add">Add Post</div>
+  <div class="tab" data-tab="booking">View Booking</div>
+</div>
+
+<!-- ================= POSTS ================= -->
+<div id="posts" class="tab-content grid-3 active">
+  {% for s in services %}
+    <a href="/owner/service/{{ s.id }}" class="service-post">
+
+      <img
+        src="{{ url_for('static', filename=s.thumb or 'uploads/service_images/default.jpg') }}"
+        class="service-img"
+        alt="{{ s.service_name }}"
+      >
+
+      <div class="service-name">{{ s.service_name }}</div>
+
+      <!-- 🔥 PRICE SECTION -->
+      <div class="price-box">
+        <span class="original-price">₹{{ s.original_price }}</span>
+        <span class="current-price">₹{{ s.price }}</span>
+
+        {% if s.original_price > s.price %}
+          <span class="discount">
+            {{ ((s.original_price - s.price) * 100 // s.original_price) }}% OFF
+          </span>
+        {% endif %}
+      </div>
+
+    </a>
+  {% endfor %}
+</div>
+
+<!-- ================= ADD POST ================= -->
+<div id="add" class="tab-content">
+  <form
+    method="post"
+    action="/owner/service/add"
+    enctype="multipart/form-data"
+    class="card"
+  >
+    <input type="hidden" name="csrf_token" value="{{ csrf_token() }}">
+
+    <input name="service_name" placeholder="Post Name" required>
+
+    <!-- Original Price -->
+    <input
+      name="original_price"
+      type="number"
+      placeholder="Original Price"
+      required
+    >
+
+    <!-- Current Price -->
+    <input
+      name="price"
+      type="number"
+      placeholder="Current Price"
+      required
+    >
+
+    <textarea name="description" placeholder="Description"></textarea>
+
+    <input type="file" name="images" multiple required>
+
+    <button class="btn full">Post</button>
+  </form>
+</div>
+
+<!-- ================= BOOKING ================= -->
+<div id="booking" class="tab-content">
+  <div id="bookingCalendar"></div>
+</div>
+
+<!-- ================= TAB SCRIPT ================= -->
+<script>
+document.querySelectorAll(".tab").forEach(tab => {
+  tab.addEventListener("click", () => {
+
+    document.querySelectorAll(".tab").forEach(t => t.classList.remove("active"));
+    tab.classList.add("active");
+
+    document.querySelectorAll(".tab-content").forEach(c => {
+      c.classList.remove("active");
+    });
+
+    const target = tab.dataset.tab;
+    document.getElementById(target).classList.add("active");
+
+    if (target === "booking") {
+      fetch("/owner/bookings")
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("bookingCalendar").innerHTML = html;
+        });
+    }
+  });
+});
+</script>
+
+{% endblock %}
